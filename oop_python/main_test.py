@@ -1,46 +1,47 @@
 from main import *
 
 run_cases = [
-    ((0, 1, 4, 2), 0, 1, 4, 2),
-    ((5, 5, 0, 0), 5, 5, 0, 0),
+    ((1, 2, 3, 4), (1, 3, 4, 2)),
+    ((3, 4, 1, 2), (1, 3, 4, 2)),
 ]
 
 submit_cases = run_cases + [
-    ((-10, -10, -5, -5), -10, -10, -5, -5),
+    ((5, 4, 2, 1), (2, 5, 4, 1)),
 ]
 
 
-def test(input_args, expected_x1, expected_y1, expected_x2, expected_y2):
-    try:
-        print("---------------------------------")
-        print(f"Input arguments: {input_args}")
-        print("")
+def test(rect_args, expected_output):
+    rectangle = Rectangle(rect_args[0], rect_args[1], rect_args[2], rect_args[3])
+    print("---------------------------------")
+    print("Inputs Rectangle:")
+    print(f" * x1: {rect_args[0]}")
+    print(f" * y1: {rect_args[1]}")
+    print(f" * x2: {rect_args[2]}")
+    print(f" * y2: {rect_args[3]}")
+    print("")
 
-        # Create rectangle from input arguments
-        rectangle = Rectangle(*input_args)
+    expected_left_x, expected_right_x, expected_top_y, expected_bottom_y = (
+        expected_output
+    )
 
-        print(f"Expected x1: {expected_x1}")
-        print(f"Actual   x1: {rectangle.x1}")
-        print(f"Expected y1: {expected_y1}")
-        print(f"Actual   y1: {rectangle.y1}")
-        print(f"Expected x2: {expected_x2}")
-        print(f"Actual   x2: {rectangle.x2}")
-        print(f"Expected y2: {expected_y2}")
-        print(f"Actual   y2: {rectangle.y2}")
+    actual_left_x = rectangle.get_left_x()
+    actual_right_x = rectangle.get_right_x()
+    actual_top_y = rectangle.get_top_y()
+    actual_bottom_y = rectangle.get_bottom_y()
 
-        # Check if the rectangle has all expected values
-        if (
-            rectangle.x1 == expected_x1
-            and rectangle.y1 == expected_y1
-            and rectangle.x2 == expected_x2
-            and rectangle.y2 == expected_y2
-        ):
-            return True
+    print(f"Expected left x: {expected_left_x}")
+    print(f"Actual   left x: {actual_left_x}")
+    print(f"Expected right x: {expected_right_x}")
+    print(f"Actual   right x: {actual_right_x}")
+    print(f"Expected top y: {expected_top_y}")
+    print(f"Actual   top y: {actual_top_y}")
+    print(f"Expected bottom y: {expected_bottom_y}")
+    print(f"Actual   bottom y: {actual_bottom_y}")
 
-        return False
-    except Exception as e:
-        print(f"Error: {e}")
-        return False
+    result = (actual_left_x, actual_right_x, actual_top_y, actual_bottom_y)
+    if result == expected_output:
+        return True
+    return False
 
 
 def main():
