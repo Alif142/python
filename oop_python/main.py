@@ -1,44 +1,38 @@
-import random
+class Siege:
+    def __init__(self, max_speed, efficiency):
+        self.max_speed = max_speed
+        self.efficiency = efficiency
+
+    def get_trip_cost(self, distance, food_price):
+        return (distance / self.efficiency) * food_price
+
+    def get_cargo_volume(self):
+        pass
 
 
-class DeckOfCards:
-    SUITS = ["Hearts", "Diamonds", "Clubs", "Spades"]
-    RANKS = [
-        "Ace",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-        "Jack",
-        "Queen",
-        "King",
-    ]
+class BatteringRam(Siege):
+    def __init__(
+        self,
+        max_speed,
+        efficiency,
+        load_weight,
+        bed_area,
+    ):
+        super().__init__(max_speed, efficiency)
+        self.load_weight = load_weight
+        self.bed_area = bed_area
 
-    def __init__(self):
-        self.__cards = []
-        self.create_deck()
+    def get_trip_cost(self, distance, food_price):
+        return super().get_trip_cost(distance, food_price) + (self.load_weight * 0.01)
 
-    def create_deck(self):
-        for sute in self.SUITS:
-            for rank in self.RANKS:
-                card = (rank ,sute)
-                self.__cards.append(card)
+    def get_cargo_volume(self):
+        return self.bed_area * 2
 
-    def shuffle_deck(self):
-        random.shuffle(self.__cards)
 
-    def deal_card(self):
-        if not self.__cards:
-            return None
-        else:
-            return self.__cards.pop()
+class Catapult(Siege):
+    def __init__(self, max_speed, efficiency, cargo_volume):
+        super().__init__(max_speed, efficiency)
+        self.cargo_volume = cargo_volume
 
-    # don't touch below this line
-
-    def __str__(self):
-        return f"The deck has {len(self.__cards)} cards"
+    def get_cargo_volume(self):
+        return self.cargo_volume

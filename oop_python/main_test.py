@@ -1,128 +1,56 @@
 from main import *
 
 run_cases = [
-    ("shuffle_deck", 3, [("9", "Hearts"), ("Jack", "Clubs"), ("10", "Spades")]),
-    (
-        "deal_card",
-        4,
-        [("King", "Spades"), ("Queen", "Spades"), ("Jack", "Spades"), ("10", "Spades")],
-    ),
-    ("deal_card", 3, [("King", "Spades"), ("Queen", "Spades"), ("Jack", "Spades")]),
+    (Siege(100, 10), 100, 4, 40, None),
+    (BatteringRam(100, 10, 2000, 5), 100, 5, 70, 10),
+    (Catapult(100, 10, 2), 100, 6, 60, 2),
 ]
 
 submit_cases = run_cases + [
-    ("shuffle_deck", 3, [("9", "Hearts"), ("Jack", "Clubs"), ("10", "Spades")]),
-    (
-        "deal_card",
-        4,
-        [("King", "Spades"), ("Queen", "Spades"), ("Jack", "Spades"), ("10", "Spades")],
-    ),
-    ("deal_card", 3, [("King", "Spades"), ("Queen", "Spades"), ("Jack", "Spades")]),
-    ("shuffle_deck", 3, [("9", "Hearts"), ("Jack", "Clubs"), ("10", "Spades")]),
-    ("deal_card", 3, [("King", "Spades"), ("Queen", "Spades"), ("Jack", "Spades")]),
-    (
-        "deal_card",
-        53,
-        [
-            ("King", "Spades"),
-            ("Queen", "Spades"),
-            ("Jack", "Spades"),
-            ("10", "Spades"),
-            ("9", "Spades"),
-            ("8", "Spades"),
-            ("7", "Spades"),
-            ("6", "Spades"),
-            ("5", "Spades"),
-            ("4", "Spades"),
-            ("3", "Spades"),
-            ("2", "Spades"),
-            ("Ace", "Spades"),
-            ("King", "Clubs"),
-            ("Queen", "Clubs"),
-            ("Jack", "Clubs"),
-            ("10", "Clubs"),
-            ("9", "Clubs"),
-            ("8", "Clubs"),
-            ("7", "Clubs"),
-            ("6", "Clubs"),
-            ("5", "Clubs"),
-            ("4", "Clubs"),
-            ("3", "Clubs"),
-            ("2", "Clubs"),
-            ("Ace", "Clubs"),
-            ("King", "Diamonds"),
-            ("Queen", "Diamonds"),
-            ("Jack", "Diamonds"),
-            ("10", "Diamonds"),
-            ("9", "Diamonds"),
-            ("8", "Diamonds"),
-            ("7", "Diamonds"),
-            ("6", "Diamonds"),
-            ("5", "Diamonds"),
-            ("4", "Diamonds"),
-            ("3", "Diamonds"),
-            ("2", "Diamonds"),
-            ("Ace", "Diamonds"),
-            ("King", "Hearts"),
-            ("Queen", "Hearts"),
-            ("Jack", "Hearts"),
-            ("10", "Hearts"),
-            ("9", "Hearts"),
-            ("8", "Hearts"),
-            ("7", "Hearts"),
-            ("6", "Hearts"),
-            ("5", "Hearts"),
-            ("4", "Hearts"),
-            ("3", "Hearts"),
-            ("2", "Hearts"),
-            ("Ace", "Hearts"),
-            None,
-        ],
-    ),
+    (Siege(60, 5), 100, 2, 40, None),
+    (BatteringRam(80, 5, 2000, 4), 100, 4, 100, 8),
+    (Catapult(90, 4, 3), 100, 10, 250, 3),
 ]
 
 
-def test(action, num_cards, expected):
-    print("---------------------------------")
-    print(f"Testing action: {action}, dealing {num_cards} cards")
-    print(f"Expected Output:")
-    print_cards(expected)
-    deck = DeckOfCards()
-    random.seed(1)
-    result = []
-
-    if action == "shuffle_deck":
-        print("Shuffling deck...")
-        deck.shuffle_deck()
-        print(f"dealing {num_cards} cards")
-        for _ in range(num_cards):
-            result.append(deck.deal_card())
-
-    elif action == "deal_card":
-        for _ in range(num_cards):
-            result.append(deck.deal_card())
-
-    print(f"Actual Output:")
-    print_cards(result)
-    if result == expected:
-        print("Pass")
-        return True
-    else:
+def test(vehicle, distance, fuel_price, expected_cost, expected_cargo_volume):
+    try:
+        vehicle_type = vehicle.__class__.__name__
+        actual_cost = int(vehicle.get_trip_cost(distance, fuel_price))
+        actual_cargo_volume = vehicle.get_cargo_volume()
+        if actual_cargo_volume is not None:
+            actual_cargo_volume = int(actual_cargo_volume)
+        print("---------------------------------")
+        print(f"Testing {vehicle_type}")
+        print(f" * Max Speed:  {vehicle.max_speed} kph")
+        print(f" * Efficiency: {vehicle.efficiency} km/food")
+        print(f"Expected Cargo Volume: {expected_cargo_volume}")
+        print(f"Actual Cargo Volume:   {actual_cargo_volume}")
+        print("")
+        print(f"Inputs:")
+        print(f" * Distance: {distance} km")
+        print(f" * Price: {fuel_price} per food")
+        print(f"Expected Trip Cost: {expected_cost} ")
+        print(f"Actual Trip Cost:   {actual_cost}")
+        if (
+            actual_cost == expected_cost
+            and expected_cargo_volume == actual_cargo_volume
+        ):
+            print("Pass")
+            return True
+        else:
+            print("Fail")
+            return False
+    except Exception as e:
+        print(f"Error: {e}")
         print("Fail")
         return False
-
-
-def print_cards(cards):
-    for card in cards:
-        if card is None:
-            print("* <None>")
-        else:
-            print(f"* {card[0]} of {card[1]}")
 
 
 def main():
     passed = 0
     failed = 0
+    skipped = len(submit_cases) - len(test_cases)
     for test_case in test_cases:
         correct = test(*test_case)
         if correct:
@@ -133,7 +61,10 @@ def main():
         print("============= PASS ==============")
     else:
         print("============= FAIL ==============")
-    print(f"{passed} passed, {failed} failed")
+    if skipped > 0:
+        print(f"{passed} passed, {failed} failed, {skipped} skipped")
+    else:
+        print(f"{passed} passed, {failed} failed")
 
 
 test_cases = submit_cases
@@ -141,4 +72,3 @@ if "__RUN__" in globals():
     test_cases = run_cases
 
 main()
-
