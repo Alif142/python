@@ -1,49 +1,45 @@
 from main import *
 
 run_cases = [
-    (Siege(100, 10), 100, 4, 40, None),
-    (BatteringRam(100, 10, 2000, 5), 100, 5, 70, 10),
-    (Catapult(100, 10, 2), 100, 6, 60, 2),
+    ((0, 1, 4, 2), 0, 1, 4, 2),
+    ((5, 5, 0, 0), 5, 5, 0, 0),
 ]
 
 submit_cases = run_cases + [
-    (Siege(60, 5), 100, 2, 40, None),
-    (BatteringRam(80, 5, 2000, 4), 100, 4, 100, 8),
-    (Catapult(90, 4, 3), 100, 10, 250, 3),
+    ((-10, -10, -5, -5), -10, -10, -5, -5),
 ]
 
 
-def test(vehicle, distance, fuel_price, expected_cost, expected_cargo_volume):
+def test(input_args, expected_x1, expected_y1, expected_x2, expected_y2):
     try:
-        vehicle_type = vehicle.__class__.__name__
-        actual_cost = int(vehicle.get_trip_cost(distance, fuel_price))
-        actual_cargo_volume = vehicle.get_cargo_volume()
-        if actual_cargo_volume is not None:
-            actual_cargo_volume = int(actual_cargo_volume)
         print("---------------------------------")
-        print(f"Testing {vehicle_type}")
-        print(f" * Max Speed:  {vehicle.max_speed} kph")
-        print(f" * Efficiency: {vehicle.efficiency} km/food")
-        print(f"Expected Cargo Volume: {expected_cargo_volume}")
-        print(f"Actual Cargo Volume:   {actual_cargo_volume}")
+        print(f"Input arguments: {input_args}")
         print("")
-        print(f"Inputs:")
-        print(f" * Distance: {distance} km")
-        print(f" * Price: {fuel_price} per food")
-        print(f"Expected Trip Cost: {expected_cost} ")
-        print(f"Actual Trip Cost:   {actual_cost}")
+
+        # Create rectangle from input arguments
+        rectangle = Rectangle(*input_args)
+
+        print(f"Expected x1: {expected_x1}")
+        print(f"Actual   x1: {rectangle.x1}")
+        print(f"Expected y1: {expected_y1}")
+        print(f"Actual   y1: {rectangle.y1}")
+        print(f"Expected x2: {expected_x2}")
+        print(f"Actual   x2: {rectangle.x2}")
+        print(f"Expected y2: {expected_y2}")
+        print(f"Actual   y2: {rectangle.y2}")
+
+        # Check if the rectangle has all expected values
         if (
-            actual_cost == expected_cost
-            and expected_cargo_volume == actual_cargo_volume
+            rectangle.x1 == expected_x1
+            and rectangle.y1 == expected_y1
+            and rectangle.x2 == expected_x2
+            and rectangle.y2 == expected_y2
         ):
-            print("Pass")
             return True
-        else:
-            print("Fail")
-            return False
+
+        return False
     except Exception as e:
         print(f"Error: {e}")
-        print("Fail")
         return False
 
 
@@ -54,8 +50,10 @@ def main():
     for test_case in test_cases:
         correct = test(*test_case)
         if correct:
+            print("Pass")
             passed += 1
         else:
+            print("Fail")
             failed += 1
     if failed == 0:
         print("============= PASS ==============")
