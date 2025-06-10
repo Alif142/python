@@ -1,23 +1,40 @@
-class Rectangle:
-    def __init__(self, x1, y1, x2, y2):
-        self.__x1 = x1
-        self.__y1 = y1
-        self.__x2 = x2
-        self.__y2 = y2
+SUITS = ["Clubs", "Diamonds", "Hearts", "Spades"]
 
-    def get_left_x(self):
-        pass
+RANKS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
 
-    def get_right_x(self):
-        pass
 
-    def get_top_y(self):
-        pass
+class Card:
+    def __init__(self, rank, suit):
+        self.rank = rank
+        self.suit = suit
 
-    def get_bottom_y(self):
-        pass
+    def __eq__(self, other):
+        if SUITS.index(self.suit) == SUITS.index(other.suit) and RANKS.index(
+            self.rank
+        ) == RANKS.index(other.rank):
+            return True
+        else:
+            return False
+
+    def __lt__(self, other):
+        return (
+            SUITS.index(self.suit) < SUITS.index(other.suit)
+            and RANKS.index(self.rank) < RANKS.index(other.rank)
+        ) or (
+            SUITS.index(self.suit) > SUITS.index(other.suit)
+            and RANKS.index(self.rank) < RANKS.index(other.rank)
+        )
+
+    def __gt__(self, other):
+        return (
+            SUITS.index(self.suit) > SUITS.index(other.suit)
+            and RANKS.index(self.rank) > RANKS.index(other.rank)
+        ) or (
+            SUITS.index(self.suit) < SUITS.index(other.suit)
+            and RANKS.index(self.rank) > RANKS.index(other.rank)
+        )
 
     # don't touch below this line
 
-    def __repr__(self):
-        return f"Rectangle({self.__x1}, {self.__y1}, {self.__x2}, {self.__y2})"
+    def __str__(self):
+        return f"{self.rank} of {self.suit}"
