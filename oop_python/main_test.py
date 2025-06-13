@@ -1,51 +1,62 @@
 from main import *
 
-SUITS = ["Clubs", "Diamonds", "Hearts", "Spades"]
-
-RANKS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
-
 run_cases = [
-    ("Ace", "Hearts", "Queen", "Hearts", False, True),
-    ("2", "Spades", "2", "Hearts", False, True),
+    (Card("Ace", "Spades"), Card("2", "Clubs"), 1, 2),
+    (Card("Queen", "Hearts"), Card("Queen", "Diamonds"), 1, 2),
 ]
 
 submit_cases = run_cases + [
-    ("Ace", "Spades", "Ace", "Spades", True, False),
-    ("3", "Diamonds", "7", "Clubs", False, False),
-    ("King", "Clubs", "King", "Hearts", False, False),
-    ("Queen", "Diamonds", "Jack", "Spades", False, True),
-    ("10", "Hearts", "10", "Hearts", True, False),
+    (Card("10", "Clubs"), Card("10", "Spades"), 2, 1),
+    (Card("King", "Hearts"), Card("Queen", "Spades"), 1, 2),
+    (Card("2", "Diamonds"), Card("2", "Diamonds"), 0, 0),
+    (Card("5", "Clubs"), Card("10", "Hearts"), 2, 1),
+    (Card("Jack", "Spades"), Card("2", "Spades"), 1, 2),
 ]
 
 
-def test(rank_1, suit_1, rank_2, suit_2, expected_eq, expected_gt):
-    print("---------------------------------")
-    print(f"Inputs: {rank_1} of {suit_1}, {rank_2} of {suit_2}")
-    print("Expected:")
-    print(f" * Equal: {expected_eq}")
-    print(f" * Greater than: {expected_gt}")
-    print(f" * Less than: {not (expected_eq or expected_gt)}")
+def result_to_card(card1, card2, placement):
+    if placement == 1:
+        return card1
+    elif placement == 2:
+        return card2
+    else:
+        return "Tie"
 
-    card_1 = Card(rank_1, suit_1)
-    card_2 = Card(rank_2, suit_2)
-    result_eq = card_1 == card_2
-    result_gt = card_1 > card_2
-    result_lt = card_1 < card_2
-    print("Actual:")
-    print(f" * Equal: {result_eq}")
-    if result_eq != expected_eq:
+
+def test(card1, card2, expected_high_winner, expected_low_winner):
+    try:
+        print("---------------------------------")
+        print(f"Inputs:")
+        print(f" * card1: {card1}")
+        print(f" * card2: {card2}")
+
+        print("\nTesting HighCardRound:")
+        high_round = HighCardRound(card1, card2)
+        high_result = high_round.resolve_round()
+        expected_winner = result_to_card(card1, card2, expected_high_winner)
+        actual_winner = result_to_card(card1, card2, high_result)
+        print(f"Expected winner: {expected_winner}")
+        print(f"Actual winner:   {actual_winner}")
+        high_correct = high_result == expected_high_winner
+
+        print("\nTesting LowCardRound:")
+        low_round = LowCardRound(card1, card2)
+        low_result = low_round.resolve_round()
+        expected_winner = result_to_card(card1, card2, expected_low_winner)
+        actual_winner = result_to_card(card1, card2, low_result)
+        print(f"Expected winner: {expected_winner}")
+        print(f"Actual winner:   {actual_winner}")
+        low_correct = low_result == expected_low_winner
+
+        if high_correct and low_correct:
+            print("Pass")
+            return True
         print("Fail")
         return False
-    print(f" * Greater than: {result_gt}")
-    if result_gt != expected_gt:
+    except Exception as e:
+        print(f"Error: {e}")
         print("Fail")
         return False
-    print(f" * Less than: {result_lt}")
-    if result_lt == (expected_eq or expected_gt or None):
-        print("Fail")
-        return False
-    print("Pass")
-    return True
 
 
 def main():
