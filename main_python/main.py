@@ -1,17 +1,9 @@
-# ?
-player_level = 4
+sword_damage = 10
+start_health = 100
+end_health = start_health - sword_damage
+
 # Don't touch below this line
-
-
-def calculate_health(modifier):
-    return player_level * modifier
-
-
-def calculate_primary_stats(armor_bonus, modifier):
-    return armor_bonus + modifier + player_level
-
-
-print(f"Character has {calculate_health(10)} max health.")
-
-print(f"Character has {calculate_primary_stats(3, 8)} primary stats.")
+print(f"Sam's health is: {start_health}")
+print(f"Sam takes {sword_damage} damage...")
+print(f"Sam's health is: {end_health}")
 
